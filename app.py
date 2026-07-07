@@ -9,8 +9,7 @@ app = Flask(__name__)
 api_key = os.getenv("FIREWORKS_API_KEY")
 print(f"API Key loaded: {api_key[:10]}..." if api_key else "NO API KEY FOUND!")
 fireworks.client.api_key = api_key
-if not api_key:
-    fireworks.client.api_key = "fw_JYNA5cxjBEyM6DxZ9JsznA"
+
 
 SYSTEM_PROMPT = """You are OlfactAI, an AI smell intelligence agent. 
 Your job is to analyze smell descriptions and:
