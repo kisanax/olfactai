@@ -55,6 +55,9 @@ python app.py
 
 ## 👨‍💻 Builder
 
+## 🌐 Live Demo
+https://olfactai--kisanax.replit.app
+
 **Seto Prasetyo (kisanax)** — IT Specialist & AI Builder, Indonesia 🇮🇩
 
 ---
