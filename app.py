@@ -234,26 +234,37 @@ def analyze():
                 {"role": "system", "content": SYSTEM_PROMPT},
                 {"role": "user", "content": f"Analyze this smell: {smell_description}"}
             ],
-            max_tokens=500,
+            max_tokens=3000,
             temperature=0.3
         )
         
         import json
+        from json_repair import repair_json
+
         result_text = response.choices[0].message.content
-        # Clean JSON if wrapped in markdown
-        result_text = result_text.strip()
-        if result_text.startswith('```'):
-            result_text = result_text.split('```')[1]
-            if result_text.startswith('json'):
-                result_text = result_text[4:]
-        
-        result = json.loads(result_text)
-        return jsonify(result)
-        
+        print(f"Raw response: {result_text}")
+
+        # Cari JSON
+        start = result_text.rfind('{')
+        end = result_text.rfind('}') + 1
+        if start != -1 and end > start:
+            json_str = result_text[start:end]
+            # Auto repair JSON
+            repaired = repair_json(json_str)
+            result = json.loads(repaired)
+            return jsonify(result)
+        else:
+            return jsonify({
+                "smell_type": "Unknown",
+                "danger_level": "WARNING",
+                "description": "Could not parse response.",
+                "recommendation": result_text[-200:]
+            })
+
     except Exception as e:
         return jsonify({
             "smell_type": "Unknown",
-            "danger_level": "WARNING", 
+            "danger_level": "WARNING",
             "description": "Could not analyze smell properly.",
             "recommendation": str(e)
         })
